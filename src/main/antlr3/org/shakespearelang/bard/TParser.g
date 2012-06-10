@@ -38,6 +38,8 @@ options {
 //
 tokens {
     SCRIPT;
+    PLAY;
+    TITLE;
 }
 
 // What package should the generated source exist in?
@@ -49,49 +51,45 @@ tokens {
 
 startsymbol : play;
 
-play :  title characterdeclarationlist act |
-        act play;
-/*play : title characterdeclarationlist error;
-play : title error act;
-play : error characterdeclarationlist act; */
 
-title : string endsymbol;
+play :  act play -> ^( PLAY act play ) |
+        title characterdeclarationlist act -> ^( TITLE title characterdeclarationlist act);
+
+
+title : string endsymbol ;
 
 
 act : actheader scene 
     | scene act;
 
-actheader : Act_roman Colon Comment endsymbol;
+
+actheader : Act_roman Colon comment endsymbol -> ^(Act_roman comment);
+
 
 characterdeclaration : Character Comma comment endsymbol;
-/* characterdeclaration : error Comma comment endsymbol;
-characterdeclaration : Character error comment endsymbol; */
+
 
 characterdeclarationlist : characterdeclaration+;
-                           // |  characterdeclarationlist characterdeclaration;
-/* characterdeclarationlist : characterdeclarationlist characterdeclaration; */
+
 
 characterlist :  Character And Character |
                 Character Comma characterlist;
 
+
 scene : sceneheader scenecontents;
+
 
 scenecontents :  enterexit scenecontents?|
                  line scenecontents?;
 
+
 sceneheader : Scene_roman Colon comment endsymbol;
-/* sceneheader : scene_roman Colon comment error;
-sceneheader : scene_roman error comment endsymbol; */
-
-
-//string : stringsymbol;
-string : stringsymbol
-    | stringsymbol string;
 
 
 adjective : Positive_adjective |
             Neutral_adjective |
             Negative_adjective;
+
 
 binaryoperator : The_difference_between |
                   The_product_of |
@@ -101,7 +99,11 @@ binaryoperator : The_difference_between |
 
 
 comment : string;
-/* comment : error; */
+
+
+string : stringsymbol
+    | stringsymbol string;
+
 
 comparative :  negativecomparative |
                positivecomparative;
@@ -125,22 +127,16 @@ enterexit :  Left_bracket Enter Character Right_bracket |
              Left_bracket Exit Character Right_bracket |
              Left_bracket Exeunt characterlist Right_bracket |
              Left_bracket Exeunt Right_bracket;
-/* enterexit : Left_bracket Enter error Right_bracket;
-enterexit : Left_bracket Exit error Right_bracket;
-enterexit : Left_bracket Exeunt error Right_bracket;
-enterexit : Left_bracket Error Right_bracket; */
+
 
 equality : As Adjective As;
-/* equality : as error as;
-equality : as adjective error; */
+
 
 inequality : comparative Than;
-// inequality : comparative error;
 
 
 line : Character Colon sentencelist;
-/*line : Character Colon error;
-line : Character error sentencelist;*/
+
 
 negativecomparative :  Negative_comparative |
                        More Negative_adjective |
@@ -165,20 +161,18 @@ pronoun :  First_person |
            Second_person_reflexive;
 
 
-
-
-
 sentencelist : sentence |
                (sentence sentencelist) => sentence sentencelist;
+
 
 sentence :  (conditional) => conditional Comma unconditionalsentence |
             unconditionalsentence
          ;
-//sentence : conditional error unconditionalsentence;
 
 
 conditional :  If_so |
                If_not;
+
 
 unconditionalsentence :  inout |
                          jump |
@@ -187,35 +181,21 @@ unconditionalsentence :  inout |
                          remember |
                          statement;
 
+
 inout :  openyour Heart statementsymbol |
          Speak Second_person_possessive Mind statementsymbol |
          Listen_to Second_person_possessive Heart statementsymbol |
          openyour Mind statementsymbol;
 
-/* inout : openyour error statementsymbol;
-inout : speak error mind statementsymbol;
-inout : listen_to error heart statementsymbol;
-inout : speak Second_person_possessive error statementsymbol;
-inout : listen_to Second_person_possessive error statementsymbol;
-inout : openyour heart error;
-inout : speak Second_person_possessive mind error;
-inout : listen_to Second_person_possessive heart error;
-inout : openyour mind error;
-*/
-
 
 openyour : Open Second_person_possessive;
-// openyour : open error;
 
 
 jump :  jumpphrase Act_roman statementsymbol |
         jumpphrase Scene_roman statementsymbol;
-// jump : jumpphrase error statementsymbol;
 
 
 jumpphrase : jumpphrasebeginning jumpphraseend;
-//jumpphrase : error jumpphraseend;
-//jumpphrase : jumpphrasebeginning error;
 
 
 jumpphrasebeginning :  Let_us |
@@ -228,34 +208,17 @@ jumpphraseend :  Proceed_to |
 
 
 question : Be value comparison value questionsymbol;
-/* question : be error comparison value questionsymbol;
-question : be value error value questionsymbol;
-question : be value comparison error questionsymbol; */
 
 
 recall : Recall string statementsymbol;
-//         recall error statementsymbol;
-//recall string error;
 
 
 remember : Remember value statementsymbol;
-/*remember : remember error statementsymbol;
-remember : remember value error; */
 
 
 statement :  Second_person ( Be constant statementsymbol |
                              unarticulatedconstant statementsymbol |
                              Be equality value statementsymbol );
-/* statement : Second_person be constant error;
-statement : Second_person be error statementsymbol;
-statement : Second_person error constant statementsymbol;
-statement : Second_person unarticulatedconstant error;
-statement : Second_person error statementsymbol;
-statement : Second_person be equality value error;
-statement : Second_person be equality error statementsymbol;
-statement : Second_person be error value statementsymbol;
-statement : Second_person error equality value statementsymbol; */
-
 
 
 unarticulatedconstant :  (positiveconstant) => positiveconstant |
@@ -291,10 +254,7 @@ value :  Character |
          pronoun |
          binaryoperator value And value |
          unaryoperator value;
-/*value : binaryoperator value And error;
-value : binaryoperator value error value;
-value : binaryoperator error And value;
-value : unaryoperator error; */
+
 
 stringsymbol :  Article |
                 Be |
@@ -353,8 +313,10 @@ stringsymbol :  Article |
                 Scene_roman |
                 Roman_number |
                 Nonmatch;
+
  
 questionsymbol : Question_mark;
+
 
 statementsymbol :  Exclamation_mark |
                    Period;
