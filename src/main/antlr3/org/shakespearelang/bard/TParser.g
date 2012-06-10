@@ -49,20 +49,19 @@ tokens {
 
 startsymbol : play;
 
+play :  title characterdeclarationlist act |
+        act play;
+/*play : title characterdeclarationlist error;
+play : title error act;
+play : error characterdeclarationlist act; */
+
+title : string endsymbol;
+
+
 act : actheader scene 
     | scene act;
 
 actheader : Act_roman Colon Comment endsymbol;
-            
-adjective : Positive_adjective |
-            Neutral_adjective |
-            Negative_adjective;
-
-binaryoperator : The_difference_between |
-                  The_product_of |
-                  The_quotient_between |
-                  The_remainder_of_the_quotient_between |
-                  The_sum_of;
 
 characterdeclaration : Character Comma comment endsymbol;
 /* characterdeclaration : error Comma comment endsymbol;
@@ -75,17 +74,42 @@ characterdeclarationlist : characterdeclaration+;
 characterlist :  Character And Character |
                 Character Comma characterlist;
 
+scene : sceneheader scenecontents;
+
+scenecontents :  enterexit scenecontents?|
+                 line scenecontents?;
+
+sceneheader : Scene_roman Colon comment endsymbol;
+/* sceneheader : scene_roman Colon comment error;
+sceneheader : scene_roman error comment endsymbol; */
+
+
+//string : stringsymbol;
+string : stringsymbol
+    | stringsymbol string;
+
+
+adjective : Positive_adjective |
+            Neutral_adjective |
+            Negative_adjective;
+
+binaryoperator : The_difference_between |
+                  The_product_of |
+                  The_quotient_between |
+                  The_remainder_of_the_quotient_between |
+                  The_sum_of;
+
+
 comment : string;
 /* comment : error; */
 
-comparative :  Negativecomparative |
-               Positivecomparative;
+comparative :  negativecomparative |
+               positivecomparative;
 
 comparison :  Not nonnegatedcomparison |
               nonnegatedcomparison;
 
-conditional :  If_so |
-               If_not;
+
 
 constant :  Article unarticulatedconstant |
             First_person_possessive unarticulatedconstant |
@@ -113,6 +137,56 @@ equality : as adjective error; */
 inequality : comparative Than;
 // inequality : comparative error;
 
+
+line : Character Colon sentencelist;
+/*line : Character Colon error;
+line : Character error sentencelist;*/
+
+negativecomparative :  Negative_comparative |
+                       More Negative_adjective |
+                       Less Positive_adjective;
+
+
+nonnegatedcomparison :  equality |
+                        inequality;
+
+
+
+
+positivecomparative :  Positive_comparative |
+                       More Positive_adjective |
+                       Less Negative_adjective;
+
+
+
+pronoun :  First_person |
+           First_person_reflexive |
+           Second_person |
+           Second_person_reflexive;
+
+
+
+
+
+sentencelist : sentence |
+               (sentence sentencelist) => sentence sentencelist;
+
+sentence :  (conditional) => conditional Comma unconditionalsentence |
+            unconditionalsentence
+         ;
+//sentence : conditional error unconditionalsentence;
+
+
+conditional :  If_so |
+               If_not;
+
+unconditionalsentence :  inout |
+                         jump |
+                         question |
+                         recall |
+                         remember |
+                         statement;
+
 inout :  openyour Heart statementsymbol |
          Speak Second_person_possessive Mind statementsymbol |
          Listen_to Second_person_possessive Heart statementsymbol |
@@ -129,96 +203,49 @@ inout : listen_to Second_person_possessive heart error;
 inout : openyour mind error;
 */
 
+
+openyour : Open Second_person_possessive;
+// openyour : open error;
+
+
 jump :  jumpphrase Act_roman statementsymbol |
         jumpphrase Scene_roman statementsymbol;
 // jump : jumpphrase error statementsymbol;
+
 
 jumpphrase : jumpphrasebeginning jumpphraseend;
 //jumpphrase : error jumpphraseend;
 //jumpphrase : jumpphrasebeginning error;
 
+
 jumpphrasebeginning :  Let_us |
                        We_must |
                        We_shall;
 
+
 jumpphraseend :  Proceed_to |
                  Return_to;
 
-line : Character Colon sentencelist;
-/*line : Character Colon error;
-line : Character error sentencelist;*/
-
-negativecomparative :  Negative_comparative |
-                       More Negative_adjective |
-                       Less Positive_adjective;
-
-negativeconstant :  negativenoun |
-                    Negative_adjective negativeconstant |
-                    Neutral_adjective negativeconstant;
-
-negativenoun : Negative_noun;
-
-nonnegatedcomparison :  equality |
-                        inequality;
-
-openyour : Open Second_person_possessive;
-// openyour : open error;
-
-play :  title characterdeclarationlist act |
-        act play;
-/*play : title characterdeclarationlist error;
-play : title error act;
-play : error characterdeclarationlist act; */
-
-
-positivecomparative :  Positive_comparative |
-                       More Positive_adjective |
-                       Less Negative_adjective;
-
-positiveconstant :  positivenoun |
-                    Positive_adjective positiveconstant |
-                    Neutral_adjective positiveconstant;
-
-positivenoun :  Neutral_noun |
-               Positive_noun;
-
-pronoun :  First_person |
-           First_person_reflexive |
-           Second_person |
-           Second_person_reflexive;
 
 question : Be value comparison value questionsymbol;
 /* question : be error comparison value questionsymbol;
 question : be value error value questionsymbol;
 question : be value comparison error questionsymbol; */
 
-questionsymbol : Question_mark;
 
 recall : Recall string statementsymbol;
 //         recall error statementsymbol;
 //recall string error;
 
+
 remember : Remember value statementsymbol;
 /*remember : remember error statementsymbol;
 remember : remember value error; */
 
-scene : sceneheader scenecontents;
 
-scenecontents :  enterexit scenecontents?|
-                 line scenecontents?;
-
-sceneheader : Scene_roman Colon Comment endsymbol;
-/* sceneheader : scene_roman Colon comment error;
-sceneheader : scene_roman error comment endsymbol; */
-
-sentence :  (conditional Comma)? unconditionalsentence;
-//sentence : conditional error unconditionalsentence;
-
-sentencelist : sentence+;
-
-statement :  Second_person Be constant statementsymbol |
-             Second_person unarticulatedconstant statementsymbol |
-             Second_person Be equality value statementsymbol;
+statement :  Second_person ( Be constant statementsymbol |
+                             unarticulatedconstant statementsymbol |
+                             Be equality value statementsymbol );
 /* statement : Second_person be constant error;
 statement : Second_person be error statementsymbol;
 statement : Second_person error constant statementsymbol;
@@ -229,12 +256,45 @@ statement : Second_person be equality error statementsymbol;
 statement : Second_person be error value statementsymbol;
 statement : Second_person error equality value statementsymbol; */
 
-statementsymbol :  Exclamation_mark |
-                   Period;
 
-//string : stringsymbol;
-string : stringsymbol
-    | stringsymbol string;
+
+unarticulatedconstant :  (positiveconstant) => positiveconstant |
+                         negativeconstant;
+
+
+positiveconstant :  positivenoun |
+                    Positive_adjective positiveconstant |
+                    Neutral_adjective positiveconstant;
+
+
+negativeconstant :  negativenoun |
+                    Negative_adjective negativeconstant |
+                    Neutral_adjective negativeconstant;
+
+
+positivenoun :  Neutral_noun |
+               Positive_noun;
+
+
+negativenoun : Negative_noun;
+
+
+unaryoperator :  The_cube_of |
+                 The_factorial_of |
+                 The_square_of |
+                 The_square_root_of |
+                 Twice;
+
+
+value :  Character |
+         constant |
+         pronoun |
+         binaryoperator value And value |
+         unaryoperator value;
+/*value : binaryoperator value And error;
+value : binaryoperator value error value;
+value : binaryoperator error And value;
+value : unaryoperator error; */
 
 stringsymbol :  Article |
                 Be |
@@ -274,8 +334,8 @@ stringsymbol :  Article |
                 Proceed_to |
                 Recall |
                 Remember |
-                Teturn_to |
-                Tpeak |
+                Return_to |
+                Speak |
                 Than |
                 The_cube_of |
                 The_difference_between |
@@ -293,33 +353,10 @@ stringsymbol :  Article |
                 Scene_roman |
                 Roman_number |
                 Nonmatch;
+ 
+questionsymbol : Question_mark;
 
-title : string endsymbol;
+statementsymbol :  Exclamation_mark |
+                   Period;
 
-unarticulatedconstant :  positiveconstant |
-                         negativeconstant;
-
-unaryoperator :  The_cube_of |
-                 The_factorial_of |
-                 The_square_of |
-                 The_square_root_of |
-                 Twice;
-
-unconditionalsentence :  inout |
-                         jump |
-                         question |
-                         recall |
-                         remember |
-                         statement;
-
-value :  Character |
-         constant |
-         pronoun |
-         binaryoperator value And value |
-         unaryoperator value;
-
-/*value : binaryoperator value And error;
-value : binaryoperator value error value;
-value : binaryoperator error And value;
-value : unaryoperator error; */
-
+           

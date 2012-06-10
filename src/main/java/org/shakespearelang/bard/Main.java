@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.Token;
 import org.antlr.runtime.tree.CommonTreeAdaptor;
 import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.antlr.runtime.tree.DOTTreeGenerator;
@@ -95,6 +96,7 @@ class Main {
 
                     if  (sourceFile.length() > 3)
                     {
+                        // TODO can we use java file api to get the extension?
                         String suffix = sourceFile.substring(sourceFile.length()-4).toLowerCase();
 
                         // Ensure that this is a DEMO script (or seemingly)
@@ -132,6 +134,13 @@ class Main {
                 //
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
 
+                // FIXME only for debug lexer
+//                Token token;
+//                while ((token = lexer.nextToken())!=Token.EOF_TOKEN) {
+//                    System.out.println("Token: "+token.getType() +","+ token.getText());
+//                }
+                
+                
                 // Now we need an instance of our parser
                 //
                 TParser parser = new TParser(tokens);

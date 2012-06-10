@@ -35,6 +35,6 @@ public class AntlrNoCaseFileStream  extends ANTLRFileStream {
  
             return CharStream.EOF;
         }
-        return Character.toUpperCase(data[p+i-1]);
+        return Character.toLowerCase(data[p+i-1]);
     }
 }

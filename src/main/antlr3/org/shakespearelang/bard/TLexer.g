@@ -20,6 +20,7 @@ options {
     package org.shakespearelang.bard;
 }
 
+// Probably overkill because the lexer is made case insensitive
 fragment    C : 'c' | 'C' ;
 fragment    M : 'm' | 'M' ;
 fragment    D : 'd' | 'D'; 
@@ -37,23 +38,6 @@ fragment    Roman_number : Roman_ones
                 | Roman_hundreds Roman_tens? Roman_ones?
                 | Roman_thousands Roman_hundreds? Roman_tens? Roman_ones?;
 
-fragment
-Space  :   ( ' '
-        | '\t'
-        | '\r'
-        | '\n'
-        ) {skip();}
-    ;
-
-
-// letters and digits
-fragment
-Letter  :	('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
-    ;
-
-fragment
-Digit :	'0'..'9'
-    ;
 
 Article:
     'a'
@@ -70,162 +54,162 @@ Be:
 ;
 
 Character:
-    'Achilles'
-    | 'Adonis'
-    | 'Adriana'
-    | 'Aegeon'
-    | 'Aemilia'
-    | 'Agamemnon'
-    | 'Agrippa'
-    | 'Ajax'
-    | 'Alonso'
-    | 'Andromache'
-    | 'Angelo'
-    | 'Antiochus'
-    | 'Antonio'
-    | 'Arthur'
-    | 'Autolycus'
-    | 'Balthazar'
-    | 'Banquo'
-    | 'Beatrice'
-    | 'Benedick'
-    | 'Benvolio'
-    | 'Bianca'
-    | 'Brabantio'
-    | 'Brutus'
-    | 'Capulet'
-    | 'Cassandra'
-    | 'Cassius'
-    | 'Christopher Sly'
-    | 'Cicero'
-    | 'Claudio'
-    | 'Claudius'
-    | 'Cleopatra'
-    | 'Cordelia'
-    | 'Cornelius'
-    | 'Cressida'
-    | 'Cymberline'
-    | 'Demetrius'
-    | 'Desdemona'
-    | 'Dionyza'
-    | 'Doctor Caius'
-    | 'Dogberry'
-    | 'Don John'
-    | 'Don Pedro'
-    | 'Donalbain'
-    | 'Dorcas'
-    | 'Duncan'
-    | 'Egeus'
-    | 'Emilia'
-    | 'Escalus'
-    | 'Falstaff'
-    | 'Fenton'
-    | 'Ferdinand'
-    | 'Ford'
-    | 'Fortinbras'
-    | 'Francisca'
-    | 'Friar John'
-    | 'Friar Laurence'
-    | 'Gertrude'
-    | 'Goneril'
-    | 'Hamlet'
-    | 'Hecate'
-    | 'Hector'
-    | 'Helen'
-    | 'Helena'
-    | 'Hermia'
-    | 'Hermonie'
-    | 'Hippolyta'
-    | 'Horatio'
-    | 'Imogen'
-    | 'Isabella'
-    | 'John of Gaunt'
-    | 'John of Lancaster'
-    | 'Julia'
-    | 'Juliet'
-    | 'Julius Caesar'
-    | 'King Henry'
-    | 'King John'
-    | 'King Lear'
-    | 'King Richard'
-    | 'Lady Capulet'
-    | 'Lady Macbeth'
-    | 'Lady Macduff'
-    | 'Lady Montague'
-    | 'Lennox'
-    | 'Leonato'
-    | 'Luciana'
-    | 'Lucio'
-    | 'Lychorida'
-    | 'Lysander'
-    | 'Macbeth'
-    | 'Macduff'
-    | 'Malcolm'
-    | 'Mariana'
-    | 'Mark Antony'
-    | 'Mercutio'
-    | 'Miranda'
-    | 'Mistress Ford'
-    | 'Mistress Overdone'
-    | 'Mistress Page'
-    | 'Montague'
-    | 'Mopsa'
-    | 'Oberon'
-    | 'Octavia'
-    | 'Octavius Caesar'
-    | 'Olivia'
-    | 'Ophelia'
-    | 'Orlando'
-    | 'Orsino'
-    | 'Othello'
-    | 'Page'
-    | 'Pantino'
-    | 'Paris'
-    | 'Pericles'
-    | 'Pinch'
-    | 'Polonius'
-    | 'Pompeius'
-    | 'Portia'
-    | 'Priam'
-    | 'Prince Henry'
-    | 'Prospero'
-    | 'Proteus'
-    | 'Publius'
-    | 'Puck'
-    | 'Queen Elinor'
+      'achilles'
+    | 'adonis'
+    | 'adriana'
+    | 'aegeon'
+    | 'aemilia'
+    | 'agamemnon'
+    | 'agrippa'
+    | 'ajax'
+    | 'alonso'
+    | 'andromache'
+    | 'angelo'
+    | 'antiochus'
+    | 'antonio'
+    | 'arthur'
+    | 'autolycus'
+    | 'balthazar'
+    | 'banquo'
+    | 'beatrice'
+    | 'benedick'
+    | 'benvolio'
+    | 'bianca'
+    | 'brabantio'
+    | 'brutus'
+    | 'capulet'
+    | 'cassandra'
+    | 'cassius'
+    | 'christopher sly'
+    | 'cicero'
+    | 'claudio'
+    | 'claudius'
+    | 'cleopatra'
+    | 'cordelia'
+    | 'cornelius'
+    | 'cressida'
+    | 'cymberline'
+    | 'demetrius'
+    | 'desdemona'
+    | 'dionyza'
+    | 'doctor caius'
+    | 'dogberry'
+    | 'don john'
+    | 'don pedro'
+    | 'donalbain'
+    | 'dorcas'
+    | 'duncan'
+    | 'egeus'
+    | 'emilia'
+    | 'escalus'
+    | 'falstaff'
+    | 'fenton'
+    | 'ferdinand'
+    | 'ford'
+    | 'fortinbras'
+    | 'francisca'
+    | 'friar john'
+    | 'friar laurence'
+    | 'gertrude'
+    | 'goneril'
+    | 'hamlet'
+    | 'hecate'
+    | 'hector'
+    | 'helen'
+    | 'helena'
+    | 'hermia'
+    | 'hermonie'
+    | 'hippolyta'
+    | 'horatio'
+    | 'imogen'
+    | 'isabella'
+    | 'john of gaunt'
+    | 'john of lancaster'
+    | 'julia'
+    | 'juliet'
+    | 'julius caesar'
+    | 'king henry'
+    | 'king john'
+    | 'king lear'
+    | 'king Richard'
+    | 'lady capulet'
+    | 'lady macbeth'
+    | 'lady macduff'
+    | 'lady montague'
+    | 'lennox'
+    | 'leonato'
+    | 'luciana'
+    | 'lucio'
+    | 'lychorida'
+    | 'lysander'
+    | 'macbeth'
+    | 'macduff'
+    | 'malcolm'
+    | 'mariana'
+    | 'mark antony'
+    | 'mercutio'
+    | 'miranda'
+    | 'mistress ford'
+    | 'mistress overdone'
+    | 'mistress page'
+    | 'montague'
+    | 'mopsa'
+    | 'oberon'
+    | 'octavia'
+    | 'octavius caesar'
+    | 'olivia'
+    | 'ophelia'
+    | 'orlando'
+    | 'orsino'
+    | 'othello'
+    | 'page'
+    | 'pantino'
+    | 'paris'
+    | 'pericles'
+    | 'pinch'
+    | 'polonius'
+    | 'pompeius'
+    | 'portia'
+    | 'priam'
+    | 'prince henry'
+    | 'prospero'
+    | 'proteus'
+    | 'publius'
+    | 'puck'
+    | 'queen Elinor'
     | 'Regan'
     | 'Robin'
-    | 'Romeo'
+    | 'romeo'
     | 'Rosalind'
-    | 'Sebastian'
-    | 'Shallow'
-    | 'Shylock'
-    | 'Slender'
-    | 'Solinus'
-    | 'Stephano'
-    | 'Thaisa'
-    | 'The Abbot of Westminster'
-    | 'The Apothecary'
-    | 'The Archbishop of Canterbury'
-    | 'The Duke of Milan'
-    | 'The Duke of Venice'
-    | 'The Ghost'
-    | 'Theseus'
-    | 'Thurio'
-    | 'Timon'
-    | 'Titania'
-    | 'Titus'
-    | 'Troilus'
-    | 'Tybalt'
-    | 'Ulysses'
-    | 'Valentine'
-    | 'Venus'
-    | 'Vincentio'
-    | 'Viola'
+    | 'sebastian'
+    | 'shallow'
+    | 'shylock'
+    | 'slender'
+    | 'solinus'
+    | 'stephano'
+    | 'thaisa'
+    | 'the abbot of westminster'
+    | 'the apothecary'
+    | 'the archbishop of canterbury'
+    | 'the duke of milan'
+    | 'the duke of venice'
+    | 'the ghost'
+    | 'theseus'
+    | 'thurio'
+    | 'timon'
+    | 'titania'
+    | 'titus'
+    | 'troilus'
+    | 'tybalt'
+    | 'ulysses'
+    | 'valentine'
+    | 'venus'
+    | 'vincentio'
+    | 'viola'
 ;
 
 First_person:
-    'I'
+    'i'
     | 'me'
 ;
 
@@ -280,8 +264,8 @@ Negative_comparative:
 ;
 
 Negative_noun:
-    'Hell'
-    | 'Microsoft'
+    'hell'
+    | 'microsoft'
     | 'bastard'
     | 'beggar'
     | 'blister'
@@ -428,9 +412,9 @@ Positive_comparative:
 ;
 
 Positive_noun:
-    'Heaven'
-    | 'King'
-    | 'Lord'
+    'heaven'
+    | 'king'
+    | 'lord'
     | 'angel'
     | 'flower'
     | 'happiness'
@@ -474,45 +458,74 @@ Enter : 'enter' ;
 Exeunt : 'exunt';
 Exit :'exit' ;
 Heart : 'heart';
-If_not : 'if' Space 'not';
-If_so : 'if' Space 'so' ;
+If_not : 'if'  InSpace 'not';
+If_so : 'if'  InSpace 'so' ;
 Less : 'less' ;
-Let_us : 'let' Space 'us' ;
-Listen_to : 'listen' Space 'to' ;
+Let_us : 'let'  InSpace 'us' ;
+Listen_to : 'listen'  InSpace 'to' ;
 Mind : 'mind' ;
 More : 'more' ;
 Not : 'not' ;
 Open : 'open' ;
-Proceed_to : 'proceed' Space 'to' ;
+Proceed_to : 'proceed'  InSpace 'to' ;
 Recall : 'recall' ;
 Remember : 'remember' ;
-Return_to : 'return' Space 'to' ;
+Return_to : 'return'  InSpace 'to' ;
 Speak : 'speak' ;
 Than : 'than' ;
-The_cube_of : 'the' Space 'cube' Space 'of' ;
-The_difference_between : 'the' Space 'difference' Space 'between' ;
-The_factorial_of : 'the' Space 'factorial' Space 'of' ;
-The_product_of : 'the' Space 'product' Space 'of' ;
-The_quotient_between : 'the' Space 'quotient' Space 'between' ;
-The_remainder_of_the_quotient_between : 'the' Space 'remainder' Space 'of' Space 'the' Space 'quotient' Space 'between' ;
-The_square_of : 'the' Space 'square' Space 'of' ;
-The_square_root_of : 'the' Space 'square' Space 'root' Space 'of' ;
-The_sum_of : 'the' Space 'sum' Space 'of' ;
+The_cube_of : 'the'  InSpace 'cube'  InSpace 'of' ;
+The_difference_between : 'the'  InSpace 'difference'  InSpace 'between' ;
+The_factorial_of : 'the'  InSpace 'factorial'  InSpace 'of' ;
+The_product_of : 'the'  InSpace 'product'  InSpace 'of' ;
+The_quotient_between : 'the'  InSpace 'quotient'  InSpace 'between' ;
+The_remainder_of_the_quotient_between : 'the'  InSpace 'remainder'  InSpace 'of'  InSpace 'the'  InSpace 'quotient'  InSpace 'between' ;
+The_square_of : 'the'  InSpace 'square'  InSpace 'of' ;
+The_square_root_of : 'the'  InSpace 'square'  InSpace 'root'  InSpace 'of' ;
+The_sum_of : 'the'  InSpace 'sum'  InSpace 'of' ;
 Twice : 'twice' ;
-We_must : 'we' Space 'must' ;
-We_shall : 'we' Space 'shall' ;
+We_must : 'we'  InSpace 'must' ;
+We_shall : 'we'  InSpace 'shall' ;
 
 
 Colon : ':' ;
 Comma : ',' ;
-Exclamation_mark : '!';
+Exclamation_mark : '!'; 
 Left_bracket : '[';
 Period : '.';
 Question_mark : '?';
 Right_bracket : ']';
 
-Act_roman : 'act' Space Roman_number;
-Scene_roman : 'scene' Space Roman_number;
+Act_roman : 'act' InSpace Roman_number;
+Scene_roman : 'scene' InSpace Roman_number;
 
-Nonmatch : Letter (Letter | Digit)*  /* |  0 .. 0xff */;
+fragment
+InSpace :   ( ' '
+        | '\t'
+        | '\r'
+        | '\n'
+        )+
+;
+
+Space  :   ( ' '
+        | '\t'
+        | '\r'
+        | '\n'
+        )+ {skip();}
+    ;
+
+Nonmatch :  (Letter | Digit)+ | Symbol ;
+
+
+// letters and digits
+fragment
+Letter  :	('a'..'z'|'A'..'Z')
+    ;
+
+fragment
+Digit :	'0'..'9'
+    ;
+
+fragment
+Symbol :  '\u0021'..'\u002B' | '-' | '/' | '\u003C'..'\u0040' | '\u005B'..'\u0060' | '\u007B'..'\u007F';
+
 
