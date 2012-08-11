@@ -177,10 +177,10 @@ Character:
     | 'publius'
     | 'puck'
     | 'queen Elinor'
-    | 'Regan'
-    | 'Robin'
+    | 'regan'
+    | 'robin'
     | 'romeo'
-    | 'Rosalind'
+    | 'rosalind'
     | 'sebastian'
     | 'shallow'
     | 'shylock'
@@ -188,7 +188,7 @@ Character:
     | 'solinus'
     | 'stephano'
     | 'thaisa'
-    | 'the abbot of westminster'
+    | 'the abbot of westminster' // FIXME use inSpace?
     | 'the apothecary'
     | 'the archbishop of canterbury'
     | 'the duke of milan'
@@ -526,6 +526,6 @@ Digit :	'0'..'9'
     ;
 
 fragment
-Symbol :  '\u0021'..'\u002B' | '-' | '/' | '\u003C'..'\u0040' | '\u005B'..'\u0060' | '\u007B'..'\u007F';
+Symbol :  '\u0021'..'\u002B' | '-' | '/' | '\u003C'..'\u0040' | '\u005B'..'\u0060' | '\u007B'..'\u007F' | '\u0080'..'\u00FF';
 
 
