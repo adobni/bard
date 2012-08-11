@@ -37,9 +37,15 @@ options {
 // Some imaginary tokens for tree rewrites
 //
 tokens {
-    SCRIPT;
     PLAY;
     TITLE;
+    SCENE;
+    SCENECONTENTS;
+    CHARACTERLIST;
+    GOTO;
+    LINE;
+    EQUALITY;
+    IF;
 }
 
 // What package should the generated source exist in?
@@ -56,34 +62,36 @@ play :  act play -> ^( PLAY act play ) |
         title characterdeclarationlist act -> ^( TITLE title characterdeclarationlist act);
 
 
-title : string endsymbol ;
+title : string endsymbol -> ^(TITLE string);
 
 
-act : actheader scene 
-    | scene act;
+act : actheader scene -> ^(actheader scene)
+    | scene act -> ^(scene act)
+;
 
 
 actheader : Act_roman Colon comment endsymbol -> ^(Act_roman comment);
 
 
-characterdeclaration : Character Comma comment endsymbol;
+scene : sceneheader scenecontents -> ^(SCENE sceneheader scenecontents);
+
+
+scenecontents :  enterexit scenecontents? -> ^(SCENECONTENTS enterexit scenecontents?) |
+                 line scenecontents? -> ^(SCENECONTENTS line scenecontents?);
+
+
+sceneheader : Scene_roman Colon comment endsymbol;
 
 
 characterdeclarationlist : characterdeclaration+;
 
 
-characterlist :  Character And Character |
-                Character Comma characterlist;
+characterdeclaration : Character Comma comment endsymbol -> ^(Character comment)
+;
 
 
-scene : sceneheader scenecontents;
-
-
-scenecontents :  enterexit scenecontents?|
-                 line scenecontents?;
-
-
-sceneheader : Scene_roman Colon comment endsymbol;
+characterlist :  c1=Character And c2=Character -> ^(CHARACTERLIST $c1 ^(Character $c2)) |
+                Character Comma characterlist -> ^(CHARACTERLIST Character characterlist);
 
 
 adjective : Positive_adjective |
@@ -102,51 +110,52 @@ comment : string;
 
 
 string : stringsymbol
-    | stringsymbol string;
+    | stringsymbol string -> ^(stringsymbol string);
 
-
-comparative :  negativecomparative |
-               positivecomparative;
-
-comparison :  Not nonnegatedcomparison |
-              nonnegatedcomparison;
-
-
-
-constant :  Article unarticulatedconstant |
-            First_person_possessive unarticulatedconstant |
-            Second_person_possessive unarticulatedconstant |
-            Third_person_possessive unarticulatedconstant |
-            Nothing;
 
 endsymbol :  questionsymbol |
              statementsymbol;
 
-enterexit :  Left_bracket Enter Character Right_bracket |
-             Left_bracket Enter characterlist Right_bracket |
-             Left_bracket Exit Character Right_bracket |
-             Left_bracket Exeunt characterlist Right_bracket |
-             Left_bracket Exeunt Right_bracket;
+
+enterexit :  Left_bracket Enter Character Right_bracket -> ^( Enter Character ) |
+             Left_bracket Enter characterlist Right_bracket -> ^( Enter characterlist ) |
+             Left_bracket Exit Character Right_bracket -> ^(Exit Character) |
+             Left_bracket Exeunt characterlist? Right_bracket -> ^(Exeunt characterlist?)
+            ;
 
 
-equality : As Adjective As;
+line : Character Colon sentencelist -> ^(LINE Character sentencelist);
 
 
-inequality : comparative Than;
+comparison :  Not nonnegatedcomparison -> ^(Not nonnegatedcomparison) |
+              nonnegatedcomparison;
 
 
-line : Character Colon sentencelist;
+constant :  Article unarticulatedconstant -> ^(Article unarticulatedconstant)|
+            First_person_possessive unarticulatedconstant -> ^(First_person_possessive unarticulatedconstant) |
+            Second_person_possessive unarticulatedconstant -> ^(Second_person_possessive unarticulatedconstant) |
+            Third_person_possessive unarticulatedconstant -> ^(Third_person_possessive unarticulatedconstant) |
+            Nothing;
 
-
-negativecomparative :  Negative_comparative |
-                       More Negative_adjective |
-                       Less Positive_adjective;
 
 
 nonnegatedcomparison :  equality |
                         inequality;
 
 
+equality : As Adjective As -> ^(EQUALITY); 
+
+
+inequality : comparative Than;
+
+
+comparative :  negativecomparative |
+               positivecomparative;
+
+
+negativecomparative :  Negative_comparative |
+                       More Negative_adjective |
+                       Less Positive_adjective;
 
 
 positivecomparative :  Positive_comparative |
@@ -191,8 +200,8 @@ inout :  openyour Heart statementsymbol |
 openyour : Open Second_person_possessive;
 
 
-jump :  jumpphrase Act_roman statementsymbol |
-        jumpphrase Scene_roman statementsymbol;
+jump :  jumpphrase Act_roman statementsymbol -> ^(GOTO Act_roman statementsymbol) |
+        jumpphrase Scene_roman statementsymbol^(GOTO Scene_roman statementsymbol) ;
 
 
 jumpphrase : jumpphrasebeginning jumpphraseend;
@@ -207,10 +216,10 @@ jumpphraseend :  Proceed_to |
                  Return_to;
 
 
-question : Be value comparison value questionsymbol;
+question : Be v1=value comparison v2=value questionsymbol -> ^(IF $v1 comparison $v2);
 
 
-recall : Recall string statementsymbol;
+recall : Recall string statementsymbol -> ^(Recall string statementsymbol);
 
 
 remember : Remember value statementsymbol;
