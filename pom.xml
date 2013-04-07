@@ -85,6 +85,10 @@
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr3-maven-plugin</artifactId>
                 <version>3.4</version>
+                <configuration>
+                    <trace>false</trace>
+                    <verbose>true</verbose>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
