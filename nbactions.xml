@@ -7,7 +7,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2:exec</goal>
             </goals>
             <properties>
-                <exec.args>-classpath %classpath org.shakespearelang.bard.Main fibonacci.spl</exec.args>
+                <exec.args>-classpath %classpath org.shakespearelang.bard.Main shakesbeer.spl</exec.args>
                 <exec.executable>java</exec.executable>
                 <exec.classpathScope>runtime</exec.classpathScope>
                 <exec.workingdir>c:\Users\Ale\Documents\Backups\ale2000\usuarios\ALEX\FUENTES\spl-1.2.1\examples\</exec.workingdir>
@@ -20,7 +20,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2:exec</goal>
             </goals>
             <properties>
-                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath org.shakespearelang.bard.Main fibonacci.spl</exec.args>
+                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath org.shakespearelang.bard.Main shakesbeer.spl</exec.args>
                 <exec.executable>java</exec.executable>
                 <exec.classpathScope>runtime</exec.classpathScope>
                 <jpda.listen>true</jpda.listen>
@@ -34,7 +34,7 @@
                 <goal>org.codehaus.mojo:exec-maven-plugin:1.2:exec</goal>
             </goals>
             <properties>
-                <exec.args>${profiler.args} -classpath %classpath org.shakespearelang.bard.Main fibonacci.spl</exec.args>
+                <exec.args>${profiler.args} -classpath %classpath org.shakespearelang.bard.Main shakesbeer.spl</exec.args>
                 <exec.executable>${profiler.java}</exec.executable>
                 <profiler.action>profile</profiler.action>
                 <exec.workingdir>c:\Users\Ale\Documents\Backups\ale2000\usuarios\ALEX\FUENTES\spl-1.2.1\examples\</exec.workingdir>
