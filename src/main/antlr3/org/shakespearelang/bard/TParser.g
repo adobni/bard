@@ -24,6 +24,8 @@ options {
     // parser if the lexer changes.
     //
     tokenVocab = TLexer;
+    
+    backtrack = false;
 
 
 }
