@@ -26,8 +26,7 @@ options {
     package org.shakespearelang.bard;
 }
 
-a : ^(SCRIPT stuff+)
-  | SCRIPT
+a : ^(PLAY stuff+)
   ;
 
 stuff
