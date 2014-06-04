@@ -9,15 +9,15 @@ grammar bard;
 // Some imaginary tokens for tree rewrites
 //
 tokens {
-    PLAY;
-    TITLE;
-    SCENE;
-    SCENECONTENTS;
-    CHARACTERLIST;
-    GOTO;
-    LINE;
-    EQUALITY;
-    IF;
+    PLAY,
+    TITLE,
+    SCENE,
+    SCENECONTENTS,
+    CHARACTERLIST,
+    GOTO,
+    LINE,
+    EQUALITY,
+    IF
 }
 
 // What package should the generated source exist in?
@@ -30,26 +30,26 @@ tokens {
 startsymbol : play;
 
 
-play :  act play -> ^( PLAY act play ) |
-        title characterdeclarationlist act -> ^( TITLE title characterdeclarationlist act);
+play :  act play  |
+        title characterdeclarationlist act;
 
 
-title : string endsymbol -> ^(TITLE string);
+title : string endsymbol ;
 
 
-act : actheader scene -> ^(actheader scene)
-    | scene act -> ^(scene act)
+act : actheader scene 
+    | scene act 
 ;
 
 
-actheader : Act_roman Colon comment endsymbol -> ^(Act_roman comment);
+actheader : Act_roman Colon comment endsymbol;
 
 
-scene : sceneheader scenecontents -> ^(SCENE sceneheader scenecontents);
+scene : sceneheader scenecontents;
 
 
-scenecontents :  enterexit scenecontents? -> ^(SCENECONTENTS enterexit scenecontents?) |
-                 line scenecontents? -> ^(SCENECONTENTS line scenecontents?);
+scenecontents :  enterexit scenecontents? |
+                 line scenecontents? ;
 
 
 sceneheader : Scene_roman Colon comment endsymbol;
@@ -58,12 +58,11 @@ sceneheader : Scene_roman Colon comment endsymbol;
 characterdeclarationlist : characterdeclaration+;
 
 
-characterdeclaration : Character Comma comment endsymbol -> ^(Character comment)
-;
+characterdeclaration : Character Comma comment endsymbol ;
 
 
-characterlist :  c1=Character And c2=Character -> ^(CHARACTERLIST $c1 ^(Character $c2)) |
-                Character Comma characterlist -> ^(CHARACTERLIST Character characterlist);
+characterlist :  c1=Character And c2=Character  |
+                Character Comma characterlist ;
 
 
 adjective : Positive_adjective |
@@ -82,31 +81,31 @@ comment : string;
 
 
 string : stringsymbol
-    | stringsymbol string -> ^(stringsymbol string);
+    | stringsymbol string ;
 
 
 endsymbol :  questionsymbol |
              statementsymbol;
 
 
-enterexit :  Left_bracket Enter Character Right_bracket -> ^( Enter Character ) |
-             Left_bracket Enter characterlist Right_bracket -> ^( Enter characterlist ) |
-             Left_bracket Exit Character Right_bracket -> ^(Exit Character) |
-             Left_bracket Exeunt characterlist? Right_bracket -> ^(Exeunt characterlist?)
+enterexit :  Left_bracket Enter Character Right_bracket |
+             Left_bracket Enter characterlist Right_bracket |
+             Left_bracket Exit Character Right_bracket  |
+             Left_bracket Exeunt characterlist? Right_bracket 
             ;
 
 
-line : Character Colon sentencelist -> ^(LINE Character sentencelist);
+line : Character Colon sentencelist ;
 
 
-comparison :  Not nonnegatedcomparison -> ^(Not nonnegatedcomparison) |
+comparison :  Not nonnegatedcomparison |
               nonnegatedcomparison;
 
 
-constant :  Article unarticulatedconstant -> ^(Article unarticulatedconstant)|
-            First_person_possessive unarticulatedconstant -> ^(First_person_possessive unarticulatedconstant) |
-            Second_person_possessive unarticulatedconstant -> ^(Second_person_possessive unarticulatedconstant) |
-            Third_person_possessive unarticulatedconstant -> ^(Third_person_possessive unarticulatedconstant) |
+constant :  Article unarticulatedconstant |
+            First_person_possessive unarticulatedconstant |
+            Second_person_possessive unarticulatedconstant  |
+            Third_person_possessive unarticulatedconstant  |
             Nothing;
 
 
@@ -115,7 +114,7 @@ nonnegatedcomparison :  equality |
                         inequality;
 
 
-equality : As Adjective As -> ^(EQUALITY); 
+equality : As Adjective As ; 
 
 
 inequality : comparative Than;
@@ -143,10 +142,10 @@ pronoun :  First_person |
 
 
 sentencelist : sentence |
-               (sentence sentencelist) => sentence sentencelist;
+               sentence sentencelist;
 
 
-sentence :  (conditional) => conditional Comma unconditionalsentence |
+sentence :  conditional Comma unconditionalsentence |
             unconditionalsentence
          ;
 
@@ -172,8 +171,8 @@ inout :  openyour Heart statementsymbol |
 openyour : Open Second_person_possessive;
 
 
-jump :  jumpphrase Act_roman statementsymbol -> ^(GOTO Act_roman statementsymbol) |
-        jumpphrase Scene_roman statementsymbol^(GOTO Scene_roman statementsymbol) ;
+jump :  jumpphrase Act_roman statementsymbol  |
+        jumpphrase Scene_roman statementsymbol ;
 
 
 jumpphrase : jumpphrasebeginning jumpphraseend;
@@ -188,10 +187,10 @@ jumpphraseend :  Proceed_to |
                  Return_to;
 
 
-question : Be v1=value comparison v2=value questionsymbol -> ^(IF $v1 comparison $v2);
+question : Be v1=value comparison v2=value questionsymbol ;
 
 
-recall : Recall string statementsymbol -> ^(Recall string statementsymbol);
+recall : Recall string statementsymbol ;
 
 
 remember : Remember value statementsymbol;
@@ -202,7 +201,7 @@ statement :  Second_person ( Be constant statementsymbol |
                              Be equality value statementsymbol );
 
 
-unarticulatedconstant :  (positiveconstant) => positiveconstant |
+unarticulatedconstant :  positiveconstant |
                          negativeconstant;
 
 
@@ -812,4 +811,3 @@ fragment
 Symbol :  '\u0021'..'\u002B' | '-' | '/' | '\u003C'..'\u0040' | '\u005B'..'\u0060' | '\u007B'..'\u007F' | '\u0080'..'\u00FF';
 
 
-           
