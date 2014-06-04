@@ -114,7 +114,7 @@ class Main {
                 // and tell the lexer that that is the character source.
                 
                 ANTLRInputStream input=new AntlrNoCaseFileStream(source, "Cp1252");
-                bardLexer lexer = new bardLexer(input);
+                BardLexer lexer = new BardLexer(input);
               
 
                 // Using the lexer as the token source, we create a token

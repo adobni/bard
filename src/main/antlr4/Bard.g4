@@ -3,11 +3,11 @@
  * and open the template in the editor.
  */
 
-grammar bard;
+grammar Bard;
 
 
 // Some imaginary tokens for tree rewrites
-//
+// TODO check if we need these anymore
 tokens {
     PLAY,
     TITLE,
@@ -21,10 +21,9 @@ tokens {
 }
 
 // What package should the generated source exist in?
-//
-@header {
 
-    package org.shakespearelang.bard;
+@header {
+package org.shakespearelang.bard;
 }
 
 startsymbol : play;
