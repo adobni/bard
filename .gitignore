@@ -1,2 +1,5 @@
 *.class
 target/
+/.nb-gradle/private/
+/build/
+.gradle/
