@@ -22,4 +22,13 @@ repositories {
 
 apply plugin: 'antlr4'
 
+// make the Java compile task depend on the antlr4 task
+compileJava.dependsOn antlr4
 
+// add the generated source files to the list of java sources
+sourceSets.main.java.srcDirs += antlr4.output
+
+// add antlr4 to classpath
+configurations {
+   compile.extendsFrom antlr4
+}
