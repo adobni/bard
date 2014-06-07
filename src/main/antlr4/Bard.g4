@@ -20,11 +20,6 @@ tokens {
     IF
 }
 
-// What package should the generated source exist in?
-
-@header {
-package org.shakespearelang.bard;
-}
 
 startsymbol : play;
 

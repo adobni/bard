@@ -21,7 +21,9 @@ repositories {
 }
 
 apply plugin: 'antlr4'
-
+ 
+antlr4.extraArgs=['-package', 'org.shakespearelang.bard']
+ 
 // make the Java compile task depend on the antlr4 task
 compileJava.dependsOn antlr4
 
@@ -32,3 +34,6 @@ sourceSets.main.java.srcDirs += antlr4.output
 configurations {
    compile.extendsFrom antlr4
 }
+
+
+ 
