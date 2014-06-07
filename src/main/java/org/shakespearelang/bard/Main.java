@@ -45,7 +45,7 @@ class Main {
                 }
                 else
                 {
-                    System.err.println("Usage: java -jar bard-1.0-SNAPSHOT-jar-with-dependencies.jar <directory | filename.dmo>");
+                    System.err.println("Usage: java -jar bard.jar <directory | filename.spl>");
                 }
             }
             catch (Exception ex)
@@ -114,7 +114,7 @@ class Main {
                 // and tell the lexer that that is the character source.
                 
                 ANTLRInputStream input=new AntlrNoCaseFileStream(source, "Cp1252");
-                BardLexer lexer = new BardLexer(input);
+                SPLLexer lexer = new SPLLexer(input);
               
 
                 // Using the lexer as the token source, we create a token
