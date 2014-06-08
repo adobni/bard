@@ -92,6 +92,8 @@ class Main {
                         if  (suffix.compareTo(".spl") == 0)
                         {
                             parseSource(source.getAbsolutePath());
+                        } else {
+                            System.err.println("Error: unknown extension for file="+sourceFile);
                         }
                     }
                 }
@@ -126,9 +128,10 @@ class Main {
                 System.out.println("    Parser Start");
                 long pStart = System.currentTimeMillis();
                 SPLParser parser = new SPLParser(tokens);
+                ParseTree tree=parser.startsymbol();
                 long stop = System.currentTimeMillis();
                 System.out.println("      Parsed in " + (stop - pStart) + "ms.");
-
+              
             }
             catch (FileNotFoundException ex)
             {
