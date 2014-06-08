@@ -36,4 +36,13 @@ configurations {
 }
 
 mainClassName = 'org.shakespearelang.bard.Main'
- 
+
+// run from the command line with parameters
+// each parameter must be in a propoerty called args
+// as a string separated by spaces
+// exmple: gradle run -Pargs='param1 param2 ...'
+run {
+   if ( project.hasProperty('args') ) {
+       args project.args.split('\\s+')
+   }
+}
