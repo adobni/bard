@@ -115,7 +115,7 @@ class Main {
                 // First create a file stream using the povided file/path
                 // and tell the lexer that that is the character source.
                 
-                ANTLRInputStream input=new ANTLRFileStream(source, "Cp1252");
+                ANTLRInputStream input=new AntlrNoCaseFileStream(source, "Cp1252");
                 SPLLexer lexer = new SPLLexer(input);
               
 

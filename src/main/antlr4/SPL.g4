@@ -296,6 +296,7 @@ statementsymbol :  Exclamation_mark |
                    Period;
 
 
+// Probably overkill because the lexer is made case insensitive
 fragment    C : 'c' | 'C' ;
 fragment    M : 'm' | 'M' ;
 fragment    D : 'd' | 'D'; 
@@ -308,7 +309,6 @@ fragment    Roman_thousands : M+;
 fragment    Roman_hundreds : C(D|M) | D | D C | D C C | D C C C | C | C C | C C C ;
 fragment    Roman_tens     : X(L|C) | L | L X | L X X | L X X X | X | X X | X X X ;
 fragment    Roman_ones     : I(V|X) | V | V I | V I I | V I I I | I | I I | I I I ;
-
 Roman_number : Roman_ones
                 | Roman_tens Roman_ones?
                 | Roman_hundreds Roman_tens? Roman_ones?
