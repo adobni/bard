@@ -121,33 +121,11 @@ class Main {
                 // stream to be consumed by the parser
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
 
-                // FIXME only for debug lexer
-//                Token token;
-//                while ((token = lexer.nextToken())!=Token.EOF_TOKEN) {
-//                    System.out.println("Token: "+token.getType() +","+ token.getText());
-//                }
-                
-                
-
-
                 System.out.println("file: " + source);
 
-                // Provide some user feedback
-                //
-                System.out.println("    Lexer Start");
-                long start = System.currentTimeMillis();
-                
-                // Force token load and lex (don't do this normally, 
-                // it is just for timing the lexer)
-                //
-                tokens.LT(1);
-                long lexerStop = System.currentTimeMillis();
-                System.out.println("      lexed in " + (lexerStop - start) + "ms.");
-
-                // And now we merely invoke the start rule for the parser
-                //
                 System.out.println("    Parser Start");
                 long pStart = System.currentTimeMillis();
+                SPLParser parser = new SPLParser(tokens);
                 long stop = System.currentTimeMillis();
                 System.out.println("      Parsed in " + (stop - pStart) + "ms.");
 
