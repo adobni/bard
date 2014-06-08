@@ -1,5 +1,5 @@
 apply plugin: 'java'
-
+apply plugin:'application'
 
 buildscript {
     repositories {
@@ -35,5 +35,5 @@ configurations {
    compile.extendsFrom antlr4
 }
 
-
+mainClassName = 'org.shakespearelang.bard.Main'
  
