@@ -1,4 +1,7 @@
-.gradle/
+*.class
+target/
 build/
+.gradle/
 .nb-gradle/
 .nb-gradle-properties
+

@@ -3,14 +3,9 @@ package org.shakespearelang.bard;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import org.antlr.runtime.CommonTokenStream;
-import org.antlr.runtime.Token;
-import org.antlr.runtime.tree.CommonTreeAdaptor;
-import org.antlr.runtime.tree.CommonTreeNodeStream;
-import org.antlr.runtime.tree.DOTTreeGenerator;
-import org.antlr.runtime.tree.Tree;
-import org.antlr.stringtemplate.StringTemplate;
-import org.shakespearelang.bard.TParser.startsymbol_return;
+
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.tree.*;
 
 
 /**
@@ -22,8 +17,6 @@ class Main {
 
     private static boolean makeDot = false;
 
-    static  TLexer lexer;
-
     /** Just a simple test driver for the ASP parser
      * to show how to call it.
      */
@@ -32,9 +25,6 @@ class Main {
         {
             try
             {
-                // Create the lexer, which we can keep reusing if we like
-                //
-                lexer = new TLexer();
 
                 if  (args.length > 0)
                 {
@@ -55,7 +45,7 @@ class Main {
                 }
                 else
                 {
-                    System.err.println("Usage: java -jar bard-1.0-SNAPSHOT-jar-with-dependencies.jar <directory | filename.dmo>");
+                    System.err.println("Usage: java -jar bard.jar <directory | filename.spl>");
                 }
             }
             catch (Exception ex)
@@ -86,8 +76,7 @@ class Main {
                     }
                 }
 
-                // Else find out if it is an ASP.Net file and parse it if it is
-                //
+
                 else
                 {
                     // File without paths etc
@@ -99,11 +88,12 @@ class Main {
                         // TODO can we use java file api to get the extension?
                         String suffix = sourceFile.substring(sourceFile.length()-4).toLowerCase();
 
-                        // Ensure that this is a DEMO script (or seemingly)
-                        //
+                        // Check if source has the right extension
                         if  (suffix.compareTo(".spl") == 0)
                         {
                             parseSource(source.getAbsolutePath());
+                        } else {
+                            System.err.println("Error: unknown extension for file="+sourceFile);
                         }
                     }
                 }
@@ -124,123 +114,24 @@ class Main {
             {
                 // First create a file stream using the povided file/path
                 // and tell the lexer that that is the character source.
-                // You can also use text that you have already read of course
-                // by using the string stream.
-                //
-                lexer.setCharStream(new AntlrNoCaseFileStream(source, "Cp1252"));
+                
+                ANTLRInputStream input=new AntlrNoCaseFileStream(source, "Cp1252");
+                SPLLexer lexer = new SPLLexer(input);
+              
 
                 // Using the lexer as the token source, we create a token
                 // stream to be consumed by the parser
-                //
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
-
-                // FIXME only for debug lexer
-//                Token token;
-//                while ((token = lexer.nextToken())!=Token.EOF_TOKEN) {
-//                    System.out.println("Token: "+token.getType() +","+ token.getText());
-//                }
-                
-                
-                // Now we need an instance of our parser
-                //
-                TParser parser = new TParser(tokens);
 
                 System.out.println("file: " + source);
 
-                // Provide some user feedback
-                //
-                System.out.println("    Lexer Start");
-                long start = System.currentTimeMillis();
-                
-                // Force token load and lex (don't do this normally, 
-                // it is just for timing the lexer)
-                //
-                tokens.LT(1);
-                long lexerStop = System.currentTimeMillis();
-                System.out.println("      lexed in " + (lexerStop - start) + "ms.");
-
-                // And now we merely invoke the start rule for the parser
-                //
                 System.out.println("    Parser Start");
                 long pStart = System.currentTimeMillis();
-                startsymbol_return psrReturn = parser.startsymbol();
+                SPLParser parser = new SPLParser(tokens);
+                ParseTree tree=parser.startsymbol();
                 long stop = System.currentTimeMillis();
                 System.out.println("      Parsed in " + (stop - pStart) + "ms.");
-
-                // If we got a valid a tree (the syntactic validity of the source code
-                // was found to be solid), then let's print the tree to show we
-                // did something; our testing public wants to know!
-                // We do something fairly cool here and generate a graphviz/dot
-                // specification for the tree, which will allow the users to visualize
-                // it :-) we only do that if asked via the -dot option though as not
-                // all users will hsve installed the graphviz toolset from
-                // http://www.graphviz.org
-                //
-
-                // Pick up the generic tree
-                //
-                Tree t = (Tree)psrReturn.getTree();
-
-                // NOw walk it with the generic tree walker, which does nothing but
-                // verify the tree really.
-                //
-                try
-                {
-                    if (parser.getNumberOfSyntaxErrors() == 0) {
-                        TTree walker = new TTree(new CommonTreeNodeStream(t));
-                        System.out.println("    AST Walk Start\n");
-                        pStart = System.currentTimeMillis();
-                        walker.a();
-                        stop = System.currentTimeMillis();
-                        System.out.println("\n      AST Walked in " + (stop - pStart) + "ms.");
-                     }
-                }
-                catch(Exception w)
-                {
-                    System.out.println("AST walk caused exception.");
-                    w.printStackTrace();
-                }
-
-                if  (makeDot && tokens.size() < 4096)
-                {
-
-                    // Now stringify it if you want to...
-                    //
-                    // System.out.println(t.toStringTree());
-
-                    // Use the ANLTR built in dot generator
-                    //
-                    DOTTreeGenerator gen = new DOTTreeGenerator();
-
-                    // Which we can cause to generate the DOT specification
-                    // with the input file name suffixed with .dot. You can then use
-                    // the graphviz tools or zgrviewer (Java) to view the graphical
-                    // version of the dot file.
-                    //
-                    source = source.substring(0, source.length()-3);
-                    String outputName = source + "dot";
-
-                    System.out.println("    Producing AST dot (graphviz) file");
-
-                    // It produces a jguru string template.
-                    //
-                    StringTemplate st = gen.toDOT(t, new CommonTreeAdaptor());
-
-                    // Create the output file and write the dot spec to it
-                    //
-                    FileWriter outputStream = new FileWriter(outputName);
-                    outputStream.write(st.toString());
-                    outputStream.close();
-
-                    // Invoke dot to generate a .png file
-                    //
-                    System.out.println("    Producing png graphic for tree");
-                    pStart = System.currentTimeMillis();
-                    Process proc = Runtime.getRuntime().exec("dot -Tpng -o" + source + "png " + outputName);
-                    proc.waitFor();
-                    stop = System.currentTimeMillis();
-                    System.out.println("      PNG graphic produced in " + (stop - pStart) + "ms.");
-                }
+              
             }
             catch (FileNotFoundException ex)
             {

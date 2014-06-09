@@ -1,0 +1,48 @@
+apply plugin: 'java'
+apply plugin:'application'
+
+buildscript {
+    repositories {
+        maven {
+            name 'JFrog OSS snapshot repo'
+            url  'https://oss.jfrog.org/oss-snapshot-local/'
+        }
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'me.champeau.gradle:antlr4-gradle-plugin:0.1-SNAPSHOT'
+    }
+}
+
+repositories {
+   mavenCentral()    
+   jcenter()
+}
+
+apply plugin: 'antlr4'
+ 
+antlr4.extraArgs=['-package', 'org.shakespearelang.bard']
+ 
+// make the Java compile task depend on the antlr4 task
+compileJava.dependsOn antlr4
+
+// add the generated source files to the list of java sources
+sourceSets.main.java.srcDirs += antlr4.output
+
+// add antlr4 to classpath
+configurations {
+   compile.extendsFrom antlr4
+}
+
+mainClassName = 'org.shakespearelang.bard.Main'
+
+// run from the command line with parameters
+// each parameter must be in a propoerty called args
+// as a string separated by spaces
+// exmple: gradle run -Pargs='param1 param2 ...'
+run {
+   if ( project.hasProperty('args') ) {
+       args project.args.split('\\s+')
+   }
+}
