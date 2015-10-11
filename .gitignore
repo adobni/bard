@@ -5,3 +5,6 @@ build/
 .nb-gradle/
 .nb-gradle-properties
 
+/bin/
+.classpath
+.project
