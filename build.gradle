@@ -1,38 +1,28 @@
 apply plugin: 'java'
 apply plugin:'application'
+apply plugin:'antlr'
 
-buildscript {
-    repositories {
-        maven {
-            name 'JFrog OSS snapshot repo'
-            url  'https://oss.jfrog.org/oss-snapshot-local/'
-        }
-        jcenter()
-    }
-
-    dependencies {
-        classpath 'me.champeau.gradle:antlr4-gradle-plugin:0.1-SNAPSHOT'
-    }
-}
 
 repositories {
-   mavenCentral()    
-   jcenter()
+    mavenCentral()
 }
 
-apply plugin: 'antlr4'
- 
-antlr4.extraArgs=['-package', 'org.shakespearelang.bard']
- 
-// make the Java compile task depend on the antlr4 task
-compileJava.dependsOn antlr4
+dependencies {
+    antlr  group: 'org.antlr', name: 'antlr4', version: '4.5.3'
+}
 
-// add the generated source files to the list of java sources
-sourceSets.main.java.srcDirs += antlr4.output
 
-// add antlr4 to classpath
-configurations {
-   compile.extendsFrom antlr4
+generateGrammarSource {
+    arguments += ["-package", "org.shakespearelang.bard.generated"]
+
+    doLast { // ANTLR4 is not generating the sources in the correct subdirectory
+        copy {
+            from 'build/generated-src/antlr/main/'
+            include '*.*'
+            into 'build/generated-src/antlr/main/antlr/org/shakespearlang/bard/generated'
+        }
+        project.delete fileTree('build/generated-src/antlr/main').exclude('**/org/**')
+    }
 }
 
 mainClassName = 'org.shakespearelang.bard.Main'
