@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
+import org.shakespearelang.bard.generated.*;
 
 /**
  * Test driver program for the ANTLR3 Maven Architype demo
