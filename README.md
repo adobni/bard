@@ -10,8 +10,16 @@ The objective is to write a complete compiler. Currently only the parser is impl
 Requirements
 ------------
 
-* Java 1.7+
-* Gradle 1.12
-* Groovy 2.3
+* Java 1.8
+* Gradle 3.2.1 (Gradle wrapper included in the project)
 
-Other versions may work.
+
+Building
+--------
+
+execute in Linux/macOS
+$ ./gradlew clean build
+
+in Windows
+> gradlew clean build
+
