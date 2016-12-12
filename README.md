@@ -17,9 +17,11 @@ Requirements
 Building
 --------
 
-execute in Linux/macOS
-$ ./gradlew clean build
+in Linux/macOS execute:
 
-in Windows
-> gradlew clean build
+`$ ./gradlew clean build`
+
+in Windows execute:
+
+`> gradlew clean build`
 
